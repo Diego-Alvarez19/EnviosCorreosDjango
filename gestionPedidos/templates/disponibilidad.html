@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disponibilidad Implementos</title>
+    <style>
+        /* Estilos para el banner */
+        .banner {
+            background-color: #4CAF50; /* Verde */
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Estilos para el formulario de búsqueda */
+        .search-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Estilos para la tabla de implementos */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Banner con el título -->
+<div class="banner">
+    <h1>Disponibilidad Implementos</h1>
+</div>
+
+<!-- Formulario de búsqueda y filtro -->
+<div class="search-container">
+    <form id="filtro-form" method="GET" action="{% url 'buscar_y_filtrar_implemento' %}">
+        <input type="text" placeholder="Buscar por nombre..." name="nombre">
+        <label for="edificio">Filtrar por edificio:</label>
+        <select name="edificio" id="edificio">
+            <option value="">Todos los edificios</option>
+            <option value="Julio Garavito">Julio Garavito</option>
+            <option value="Cyt">Cyt</option>
+            <option value="Concha Acústica">Concha Acústica</option>
+        </select>
+        <button type="submit">Buscar/Filtrar</button>
+    </form>
+</div>
+
+<!-- Tabla de implementos -->
+<table id="tabla-implementos">
+    <tr>
+        <th>Nombre</th>
+        <th>Código</th>
+        <th>Edificio</th>
+        <th>Disponibilidad</th>
+        <th>Hora de Reserva</th>
+        <th>Hora de Devolución</th>
+        <th>Reservar</th>
+    </tr>
+    <!-- Iterar sobre los implementos y mostrarlos en la tabla -->
+    {% for implemento in implementos %}
+    <tr>
+        <td>{{ implemento.nombre }}</td>
+        <td>{{ implemento.codigo }}</td>
+        <td>{{ implemento.edificio }}</td>
+        <td>{{ implemento.disponibilidad }}</td>
+        <td>{{ implemento.hora_reserva }}</td>
+        <td>{{ implemento.hora_devolucion }}</td>
+        {% if not implemento.disponibilidad %}
+            <td><button disabled>Reservar</button></td>
+        {% else %}
+            <td><button>Reservar</button></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#filtro-form').on('submit', function(event) {
+        event.preventDefault(); // Evita el comportamiento predeterminado de enviar el formulario
+
+        // Obtiene la URL del formulario
+        var url = $(this).attr('action');
+
+        // Obtiene los datos del formulario
+        var formData = $(this).serialize();
+
+        // Realiza la solicitud AJAX
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: formData,
+            success: function(response) {
+                // Actualiza la tabla con los resultados recibidos
+                $('#tabla-implementos').html(response.tabla_html);
+            },
+            error: function(xhr, status, error) {
+                // Maneja los errores si ocurren
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Código</th>
+        <th>Edificio</th>
+        <th>Disponibilidad</th>
+        <th>Hora de Reserva</th>
+        <th>Hora de Devolución</th>
+        <th>Reservar</th>
+    </tr>
+    <!-- Iterar sobre los implementos y mostrarlos en la tabla -->
+    {% for implemento in implementos %}
+    <tr>
+        <td>{{ implemento.nombre }}</td>
+        <td>{{ implemento.codigo }}</td>
+        <td>{{ implemento.edificio }}</td>
+        <td>{{ implemento.disponibilidad }}</td>
+        <td>{{ implemento.hora_reserva }}</td>
+        <td>{{ implemento.hora_devolucion }}</td>
+        {% if not implemento.disponibilidad %}
+            <td><button disabled>Reservar</button></td>
+        {% else %}
+            <td><button>Reservar</button></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>

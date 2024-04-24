@@ -4,6 +4,11 @@ from gestionPedidos.models import Articulos
 from django.core.mail import send_mail
 from django.conf import settings
 from gestionPedidos.forms import FormularioContacto
+from .models import Persona
+from .models import Implemento
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+
 # Create your views here.
 
 def busqueda_productos(request):
@@ -51,3 +56,56 @@ def contacto(request):
         miFormulario=FormularioContacto()
     
     return render(request, "formulario_contacto.html",{"form":miFormulario})
+
+def tabla_personas(request):
+    personas = Persona.objects.all()
+    return render(request, 'tabla.html', {'personas': personas})
+
+def tabla_reservas(request):
+    # Obtener todos los objetos del modelo
+    implementos = Implemento.objects.all()
+
+    # Aplicar filtros según los parámetros de la URL
+    nombre = request.GET.get('nombre')
+    edificio = request.GET.get('edificio')
+
+    if nombre:
+        implementos = implementos.filter(nombre__icontains=nombre)
+    if edificio:
+        implementos = implementos.filter(edificio=edificio)
+
+    # Renderizar la plantilla con los resultados filtrados
+    return render(request, 'disponibilidad.html', {'implementos': implementos})
+
+# def buscar_implemento(request):
+#     # Lógica para buscar implementos por nombre
+#     # Ejemplo:
+#     nombre = request.GET.get('nombre')
+#     implementos = Implemento.objects.filter(nombre__icontains=nombre)
+#     return render(request, 'gestionPedidos/disponibilidad.html', {'implementos': implementos})
+
+# def filtrar_por_edificio(request):
+#     # Lógica para filtrar implementos por edificio
+#     # Ejemplo:
+#     edificio = request.GET.get('edificio')
+#     implementos = Implemento.objects.filter(edificio=edificio)
+#     return render(request, 'gestionPedidos/disponibilidad.html', {'implementos': implementos})
+
+def buscar_y_filtrar_implemento(request):
+    # Obtener todos los objetos del modelo
+    implementos = Implemento.objects.all()
+
+    # Aplicar filtros según los parámetros de la URL
+    nombre = request.GET.get('nombre')
+    edificio = request.GET.get('edificio')
+
+    if nombre:
+        implementos = implementos.filter(nombre__icontains=nombre)
+    if edificio:
+        implementos = implementos.filter(edificio=edificio)
+
+    # Renderizar solo la tabla con los resultados filtrados
+    tabla_html = render_to_string('tabla_implementos_partial.html', {'implementos': implementos})
+
+    # Devolver la tabla HTML como respuesta AJAX
+    return JsonResponse({'tabla_html': tabla_html})
