@@ -35,6 +35,7 @@ button {
     cursor: pointer;
     font-size: 16px;
     text-transform: uppercase;
+    transition: background-color 0.3s ease; /* Agregar una transición suave al cambio de color de fondo */
 }
 
 button:enabled {
@@ -44,7 +45,8 @@ button:enabled {
 
 button:disabled {
     background-color: #f44336; /* Rojo */
-    color: #fff;
+    color: #ccc; /* Texto gris para indicar deshabilitado */
+    cursor: default; /* Cambiar el cursor a predeterminado */
 }
 
 /* Estilos para la tabla de implementos */
@@ -53,11 +55,22 @@ table {
     width: 100%;
     margin-top: 20px;
 }
+
 th, td {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
 }
+
 th {
     background-color: #f2f2f2;
+}
+
+/* Estilos para filas alternas de la tabla */
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Color de fondo para filas pares */
+}
+
+tr:nth-child(odd) {
+    background-color: #e6e6e6; /* Color de fondo para filas impares */
 }
