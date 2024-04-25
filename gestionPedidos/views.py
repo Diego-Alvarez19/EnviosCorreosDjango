@@ -8,7 +8,8 @@ from .models import Persona
 from .models import Implemento_1
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-
+from datetime import datetime, timedelta
+from django.utils import timezone
 # Create your views here.
 
 def busqueda_productos(request):
@@ -61,34 +62,106 @@ def tabla_personas(request):
     personas = Persona.objects.all()
     return render(request, 'tabla.html', {'personas': personas})
 
+# def tabla_reservas(request):
+#     # Obtener todos los objetos del modelo
+#     implementos = Implemento_1.objects.all()
+
+#     # Aplicar filtros según los parámetros de la URL
+#     implemento = request.GET.get('implemento')
+#     edificio = request.GET.get('edificio')
+
+#     if implemento:
+#         implementos = implementos.filter(implemento=implemento)
+#     if edificio:
+#         implementos = implementos.filter(edificio=edificio)
+
+#     # Renderizar la plantilla con los resultados filtrados
+#     return render(request, 'disponibilidad.html', {'implementos': implementos})
+
+# def buscar_y_filtrar_implemento(request):
+#     # Obtener todos los objetos del modelo
+#     implementos = Implemento_1.objects.all()
+
+#     # Aplicar filtros según los parámetros de la URL
+#     implemento = request.GET.get('implemento')
+#     edificio = request.GET.get('edificio')
+
+#     if implemento:
+#         implementos = implementos.filter(implemento=implemento)
+#     if edificio:
+#         implementos = implementos.filter(edificio=edificio)
+
+#     # Renderizar solo la tabla con los resultados filtrados
+#     tabla_html = render_to_string('tabla_implementos_partial.html', {'implementos': implementos})
+
+#     # Devolver la tabla HTML como respuesta AJAX
+#     return JsonResponse({'tabla_html': tabla_html})
+
 def tabla_reservas(request):
+    print("Entrando a la función tabla reservas")
     # Obtener todos los objetos del modelo
     implementos = Implemento_1.objects.all()
+    
+    # Obtener la hora actual en UTC
+    hora_actual_utc = timezone.now()
+
+    # Verificar y actualizar los implementos en reserva
+    for implemento in implementos:
+        if implemento.disponibilidad == 'En Reserva' and \
+                implemento.reserva_confirmada is False and \
+                implemento.hora_max_reserva_devolucion is not None:
+            # Comparar con la hora máxima de reserva (hora UTC)
+            if hora_actual_utc.time() > implemento.hora_max_reserva_devolucion:
+                implemento.disponibilidad = 'Disponible'
+                implemento.hora_reserva = None
+                implemento.hora_max_reserva_devolucion = None
+                implemento.save()
 
     # Aplicar filtros según los parámetros de la URL
-    implemento = request.GET.get('implemento')
-    edificio = request.GET.get('edificio')
+    implemento_param = request.GET.get('implemento')
+    edificio_param = request.GET.get('edificio')
 
-    if implemento:
-        implementos = implementos.filter(implemento=implemento)
-    if edificio:
-        implementos = implementos.filter(edificio=edificio)
+    if implemento_param:
+        implementos = implementos.filter(implemento=implemento_param)
+    if edificio_param:
+        implementos = implementos.filter(edificio=edificio_param)
 
     # Renderizar la plantilla con los resultados filtrados
     return render(request, 'disponibilidad.html', {'implementos': implementos})
 
 def buscar_y_filtrar_implemento(request):
+    print("Entrando a la función buscar_y_filtrar_implemento")
     # Obtener todos los objetos del modelo
     implementos = Implemento_1.objects.all()
 
-    # Aplicar filtros según los parámetros de la URL
-    implemento = request.GET.get('implemento')
-    edificio = request.GET.get('edificio')
+    # Obtener la hora actual en UTC
+    hora_actual_utc = timezone.now()
 
-    if implemento:
-        implementos = implementos.filter(implemento=implemento)
-    if edificio:
-        implementos = implementos.filter(edificio=edificio)
+    # Ajustar la hora actual a la zona horaria de Bogotá (UTC-5)
+    diferencia_horaria = timedelta(hours=-5)
+    hora_actual_bogota = hora_actual_utc + diferencia_horaria
+    print("Hora actual (Bogotá):", hora_actual_bogota.time())
+
+    # Verificar y actualizar los implementos en reserva
+    for implemento in implementos:
+        if implemento.disponibilidad == 'En Reserva' and \
+                implemento.reserva_confirmada is False and \
+                implemento.hora_max_reserva_devolucion is not None:
+            # Comparar con la hora máxima de reserva (hora local de Bogotá)
+            if hora_actual_bogota.time() > implemento.hora_max_reserva_devolucion:
+                implemento.disponibilidad = 'Disponible'
+                implemento.hora_reserva = None
+                implemento.hora_max_reserva_devolucion = None
+                implemento.save()
+
+    # Aplicar filtros según los parámetros de la URL
+    implemento_param = request.GET.get('implemento')
+    edificio_param = request.GET.get('edificio')
+
+    if implemento_param:
+        implementos = implementos.filter(implemento=implemento_param)
+    if edificio_param:
+        implementos = implementos.filter(edificio=edificio_param)
 
     # Renderizar solo la tabla con los resultados filtrados
     tabla_html = render_to_string('tabla_implementos_partial.html', {'implementos': implementos})

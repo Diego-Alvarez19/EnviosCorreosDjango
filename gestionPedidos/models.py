@@ -36,20 +36,40 @@ class Persona(models.Model):
 
 #     def __str__(self):
 #         return self.nombre
-class Implemento_1(models.Model):
-    implemento = models.CharField(max_length=100)
-    codigo = models.PositiveIntegerField(unique=True)
-    edificio = models.CharField(max_length=100)
-    
-    DISPONIBILIDAD_CHOICES = (
-        ('Disponible', 'Disponible'),
-        ('En reserva', 'En reserva'),
-        ('No disponible', 'No disponible'),
-    )
-    
-    disponibilidad = models.CharField(max_length=13, choices=DISPONIBILIDAD_CHOICES)
-    hora_reserva = models.TimeField(null=True, blank=True)
-    hora_max_reserva_devolucion = models.TimeField(null=True, blank=True)
 
-    def __str__(self):
-        return self.implemento
+
+
+# class Implemento_1(models.Model):
+#     implemento = models.CharField(max_length=100)
+#     codigo = models.PositiveIntegerField(unique=True)
+#     edificio = models.CharField(max_length=100)
+    
+#     DISPONIBILIDAD_CHOICES = (
+#         ('Disponible', 'Disponible'),
+#         ('En reserva', 'En reserva'),
+#         ('No disponible', 'No disponible'),
+#     )
+    
+#     disponibilidad = models.CharField(max_length=13, choices=DISPONIBILIDAD_CHOICES)
+#     hora_reserva = models.TimeField(null=True, blank=True)
+#     hora_max_reserva_devolucion = models.TimeField(null=True, blank=True)
+
+#     def __str__(self):
+#         return self.implemento
+    
+class Implemento_1(models.Model):
+        implemento = models.CharField(max_length=100)
+        codigo = models.PositiveIntegerField(unique=True)
+        edificio = models.CharField(max_length=100)
+        DISPONIBILIDAD_CHOICES = (
+         ('Disponible', 'Disponible'),
+          ('En reserva', 'En reserva'),
+          ('No disponible', 'No disponible'),
+        )
+        disponibilidad = models.CharField(max_length=13, choices=DISPONIBILIDAD_CHOICES)
+        hora_reserva = models.TimeField(null=True, blank=True)
+        hora_max_reserva_devolucion = models.TimeField(null=True, blank=True)
+        reserva_confirmada = models.BooleanField(default=False)
+
+        def __str__(self):
+            return self.implemento
