@@ -6,12 +6,42 @@ body {
 
 /* Estilos para el banner */
 .banner {
-    background-color: #4CAF50; /* Verde */
+    background-color: hwb(122 58% 16%); /* Verde */
     color: white;
     text-align: center;
     padding: 20px;
+    display: flex;
+    justify-content: space-between; /* Espacio igual entre los elementos */
+    align-items: center; /* Centrar verticalmente */
 }
 
+.left-content {
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+}
+
+.logo {
+    width: 80px; /* Ajusta el tamaño de la imagen según sea necesario */
+    margin-right: 5px; /* Espacio entre la imagen y el texto */
+}
+
+.right-content {
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+}
+
+.right-content p {
+    margin-left: 10px; /* Espacio entre el texto y la imagen */
+    color: black; /* Cambia el color del texto a negro */
+}
+
+.right-content img {
+    width: 50px; /* Ajusta el tamaño de la imagen según sea necesario */
+    margin-left: 10px; /* Espacio entre la imagen y el texto */
+}
+.banner h2 {
+    color: black; /* Cambia el color del texto a negro */
+}
 /* Estilos para el formulario de búsqueda */
 .search-container {
     text-align: center;
@@ -44,8 +74,8 @@ button:enabled {
 }
 
 button:disabled {
-    background-color: #f44336; /* Rojo */
-    color: #ccc; /* Texto gris para indicar deshabilitado */
+    background-color: rgb(211, 203, 203); /* Rojo */
+    color: hsl(0, 0%, 8%); /* Texto gris para indicar deshabilitado */
     cursor: default; /* Cambiar el cursor a predeterminado */
 }
 

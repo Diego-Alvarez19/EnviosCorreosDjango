@@ -24,7 +24,5 @@ urlpatterns = [
     path('contacto/', views.contacto),
     path('tabla_personas/', views.tabla_personas, name='tabla_personas'),
     path('tabla_implementos/', views.tabla_reservas, name='tabla_reservas'),
-    #path('buscar-implemento/', views.buscar_implemento, name='buscar_implemento'),
-    #path('filtrar-por-edificio/', views.filtrar_por_edificio, name='filtrar_por_edificio'),
     path('buscar_y_filtrar_implemento/', views.buscar_y_filtrar_implemento, name='buscar_y_filtrar_implemento'),
 ]

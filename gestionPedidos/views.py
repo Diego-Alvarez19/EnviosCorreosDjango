@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from gestionPedidos.forms import FormularioContacto
 from .models import Persona
-from .models import Implemento
+from .models import Implemento_1
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 
@@ -63,44 +63,30 @@ def tabla_personas(request):
 
 def tabla_reservas(request):
     # Obtener todos los objetos del modelo
-    implementos = Implemento.objects.all()
+    implementos = Implemento_1.objects.all()
 
     # Aplicar filtros según los parámetros de la URL
-    nombre = request.GET.get('nombre')
+    implemento = request.GET.get('implemento')
     edificio = request.GET.get('edificio')
 
-    if nombre:
-        implementos = implementos.filter(nombre__icontains=nombre)
+    if implemento:
+        implementos = implementos.filter(implemento=implemento)
     if edificio:
         implementos = implementos.filter(edificio=edificio)
 
     # Renderizar la plantilla con los resultados filtrados
     return render(request, 'disponibilidad.html', {'implementos': implementos})
 
-# def buscar_implemento(request):
-#     # Lógica para buscar implementos por nombre
-#     # Ejemplo:
-#     nombre = request.GET.get('nombre')
-#     implementos = Implemento.objects.filter(nombre__icontains=nombre)
-#     return render(request, 'gestionPedidos/disponibilidad.html', {'implementos': implementos})
-
-# def filtrar_por_edificio(request):
-#     # Lógica para filtrar implementos por edificio
-#     # Ejemplo:
-#     edificio = request.GET.get('edificio')
-#     implementos = Implemento.objects.filter(edificio=edificio)
-#     return render(request, 'gestionPedidos/disponibilidad.html', {'implementos': implementos})
-
 def buscar_y_filtrar_implemento(request):
     # Obtener todos los objetos del modelo
-    implementos = Implemento.objects.all()
+    implementos = Implemento_1.objects.all()
 
     # Aplicar filtros según los parámetros de la URL
-    nombre = request.GET.get('nombre')
+    implemento = request.GET.get('implemento')
     edificio = request.GET.get('edificio')
 
-    if nombre:
-        implementos = implementos.filter(nombre__icontains=nombre)
+    if implemento:
+        implementos = implementos.filter(implemento=implemento)
     if edificio:
         implementos = implementos.filter(edificio=edificio)
 

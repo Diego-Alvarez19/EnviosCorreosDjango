@@ -11,18 +11,25 @@
 
 <!-- Banner con el título -->
 <div class="banner">
-    <h1>Disponibilidad Implementos</h1>
+    <div class="left-content">
+        <img src="{% static 'icono.png' %}" alt="ZenUN" class="logo">
+        <h2>zenUN</h2>
+    </div>
+    <div class="right-content">
+        <p>ejemplo@unal.edu.co</p>
+        <img src="{% static 'usuario.png' %}" alt="user">
+    </div>
 </div>
 
 <!-- Formulario de búsqueda y filtro -->
 <div class="search-container">
     <form id="filtro-form" method="GET" action="{% url 'buscar_y_filtrar_implemento' %}">
-        <input type="text" placeholder="Buscar por nombre..." name="nombre">
+        <input type="text" placeholder="Buscar por nombre..." name="implemento">
         <label for="edificio">Filtrar por edificio:</label>
         <select name="edificio" id="edificio">
             <option value="">Todos los edificios</option>
             <option value="Julio Garavito">Julio Garavito</option>
-            <option value="Cyt">Cyt</option>
+            <option value="Polideportivo">Polideportivo</option>
             <option value="Concha Acústica">Concha Acústica</option>
         </select>
         <button type="submit">Buscar/Filtrar</button>
@@ -43,13 +50,21 @@
     <!-- Iterar sobre los implementos y mostrarlos en la tabla -->
     {% for implemento in implementos %}
     <tr>
-        <td>{{ implemento.nombre }}</td>
+        <td>{{ implemento.implemento }}</td>
         <td>{{ implemento.codigo }}</td>
         <td>{{ implemento.edificio }}</td>
         <td>{{ implemento.disponibilidad }}</td>
-        <td>{{ implemento.hora_reserva }}</td>
-        <td>{{ implemento.hora_devolucion }}</td>
-        {% if not implemento.disponibilidad %}
+        {% if implemento.hora_reserva %}
+            <td>{{ implemento.hora_reserva }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        {% if implemento.hora_max_reserva_devolucion %}
+            <td>{{ implemento.hora_max_reserva_devolucion }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        {% if implemento.disponibilidad != 'Disponible' %}
             <td><button disabled>Reservar</button></td>
         {% else %}
             <td><button>Reservar</button></td>
