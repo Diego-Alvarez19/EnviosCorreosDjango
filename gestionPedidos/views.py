@@ -101,17 +101,24 @@ def tabla_reservas(request):
     print("Entrando a la función tabla reservas")
     # Obtener todos los objetos del modelo
     implementos = Implemento_1.objects.all()
-    
-    # Obtener la hora actual en UTC
+
+   # Obtener la hora actual en UTC
     hora_actual_utc = timezone.now()
+    print("Hora actual (UTC):", hora_actual_utc)
+
+    # Ajustar la hora actual a la zona horaria de Bogotá (UTC-5)
+    diferencia_horaria = timedelta(hours=-5)
+    hora_actual_bogota = hora_actual_utc + diferencia_horaria
+    print("Hora actual (Bogotá):", hora_actual_bogota.time())
 
     # Verificar y actualizar los implementos en reserva
     for implemento in implementos:
         if implemento.disponibilidad == 'En Reserva' and \
                 implemento.reserva_confirmada is False and \
                 implemento.hora_max_reserva_devolucion is not None:
-            # Comparar con la hora máxima de reserva (hora UTC)
-            if hora_actual_utc.time() > implemento.hora_max_reserva_devolucion:
+            # Comparar con la hora máxima de reserva (hora local de Bogotá)
+            if hora_actual_bogota.time() > implemento.hora_max_reserva_devolucion:
+                print("La hora actual es mayor que la hora máxima de reserva.")
                 implemento.disponibilidad = 'Disponible'
                 implemento.hora_reserva = None
                 implemento.hora_max_reserva_devolucion = None
@@ -136,6 +143,7 @@ def buscar_y_filtrar_implemento(request):
 
     # Obtener la hora actual en UTC
     hora_actual_utc = timezone.now()
+    print("Hora actual (UTC):", hora_actual_utc)
 
     # Ajustar la hora actual a la zona horaria de Bogotá (UTC-5)
     diferencia_horaria = timedelta(hours=-5)
@@ -147,8 +155,12 @@ def buscar_y_filtrar_implemento(request):
         if implemento.disponibilidad == 'En Reserva' and \
                 implemento.reserva_confirmada is False and \
                 implemento.hora_max_reserva_devolucion is not None:
+            print("Implemento:", implemento)
+            print("Hora máxima de reserva:", implemento.hora_max_reserva_devolucion)
+
             # Comparar con la hora máxima de reserva (hora local de Bogotá)
             if hora_actual_bogota.time() > implemento.hora_max_reserva_devolucion:
+                print("La hora actual es mayor que la hora máxima de reserva.")
                 implemento.disponibilidad = 'Disponible'
                 implemento.hora_reserva = None
                 implemento.hora_max_reserva_devolucion = None
